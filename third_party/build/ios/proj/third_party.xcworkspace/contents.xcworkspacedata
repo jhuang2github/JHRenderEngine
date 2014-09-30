@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:../../../yajl/proj/ios/yajl.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:../../../protobuf-2.4.1/proj/ios/protobuf.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:../../../libzip/proj/ios/zip.xcodeproj">
+   </FileRef>
+</Workspace>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="JHThirdPartyLibs_rules" default="help">
+    <property environment="env"/>
+    <fail unless="env.ANDROIDNDK" message="NDK Path was not set. Please update your .bash_profile with export ANDROIDNDK= and the path to your NDK install."/>
+    <property name="ndk.dir" value="${env.ANDROIDNDK}"/>
+
+    <target name="ndk">
+        <exec executable="${ndk.dir}/ndk-build" failonerror="true"/>
+    </target>
+
+    <target name="-pre-build">
+        <antcall target="ndk"/>
+    </target>
+
+    <target name="clean" depends="android_rules.clean">
+        <exec executable="${ndk.dir}/ndk-build" failonerror="true">
+            <arg value="clean"/>
+        </exec>
+    </target>
+
+    <target name="go">
+        <antcall target="debug"/>
+        <antcall target="install"/>
+        <antcall target="run"/>
+    </target>
+
+    <target name="all">
+        <antcall target="debug"/>
+
+    </target>
+
+    <target name="alld">
+        <antcall target="debug"/>
+    </target>
+
+    <target name="uninstall">
+        <xpath input="${manifest.abs.file}"
+                expression="/manifest/@package" output="project.app.package" />
+
+        <exec executable="${sdk.dir}/platform-tools/adb">
+            <arg value="uninstall"/>
+            <arg value="${project.app.package}"/>
+        </exec>
+    </target>
+
+    <target name="install" depends="-set-debug-files">
+        <exec executable="${sdk.dir}/platform-tools/adb">
+            <arg value="install"/>
+            <arg value="-r"/>
+            <arg value="${out.final.file}"/>
+        </exec>
+    </target>
+
+    <target name="run">
+        <xpath input="${manifest.abs.file}"
+                expression="/manifest/@package" output="project.app.package" />
+
+        <exec executable="${sdk.dir}/platform-tools/adb">
+            <arg value="shell"/>
+            <arg value="am start -n ${project.app.package}/com.JHEngine.JHThirdPartyLibs.MainActivity"/>
+        </exec>
+    </target>
+
+    <target name="rundebug">
+        <xpath input="${manifest.abs.file}"
+                expression="/manifest/@package" output="project.app.package" />
+
+        <exec executable="${sdk.dir}/platform-tools/adb">
+            <arg value="shell"/>
+            <arg value="am start -D -n ${project.app.package}/com.JHEngine.JHThirdPartyLibs.MainActivity"/>
+        </exec>
+    </target>
+
+    <target name="logcat">
+        <exec executable="${sdk.dir}/platform-tools/adb">
+            <arg value="logcat"/>
+            <arg value="S8Jni:* Storm8:* *:S"/>
+        </exec>
+    </target>
+
+
+    <target name="stop">
+        <xpath input="${manifest.abs.file}"
+                expression="/manifest/@package" output="project.app.package" />
+
+        <exec executable="${sdk.dir}/platform-tools/adb">
+            <arg value="shell"/>
+            <arg value="am force-stop ${project.app.package}"/>
+        </exec>
+    </target>
+
+</project>
