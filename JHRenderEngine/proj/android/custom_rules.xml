@@ -75,7 +75,7 @@
     <target name="logcat">
         <exec executable="${sdk.dir}/platform-tools/adb">
             <arg value="logcat"/>
-            <arg value="S8Jni:* Storm8:* *:S"/>
+            <arg value="*:S"/>
         </exec>
     </target>
 
